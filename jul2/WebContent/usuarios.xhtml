@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+  <body>
+
+    <ui:composition template="./WEB-INF/plantillas/plantilla.xhtml">
+
+      <ui:define name="content">
+        <f:event type="preRenderView" listener="#{userxBean.listar()}"  />
+        <p:growl id="msj" showDetail="true" />
+
+        <h:form id="frmDatos" >
+          <p:commandButton value="" actionListener="#{userxBean.limpiar()}" 
+                           oncomplete="PF('wdlgDatos').show();" update=":dlgDatos" 
+                           styleClass="nuevoBtn"  title="Nuevo" />
+          <p:commandButton value=""  
+                           styleClass="pdfBtn"  title="reporte pdf" ajax="false" />
+          <p:commandButton value=""  
+                           styleClass="pdf2Btn"  title="reporte pdf" ajax="false" />
+          <p:dataTable id="data" value="#{userxBean.lstUsers}" var="userx" >
+            <p:column style="width:15px" >
+              <p:commandButton value="" actionListener="#{userxBean.eliminar(userx)}"  update="data"  
+                               styleClass="eliminaBtn"  title="Eliminar" />
+            </p:column>
+            <p:column style="width:15px" >
+              <p:commandButton value="" actionListener="#{userxBean.cargar(userx)}" 
+                               oncomplete="PF('wdlgDatos').show();" update=":dlgDatos"  
+                               styleClass="modificaBtn"  title="Modificar" />
+            </p:column>
+            <p:column headerText="Name">
+              <p:outputLabel value="#{userx.username}" />
+            </p:column>
+            <p:column headerText="First Name">
+              <p:outputLabel value="#{userx.firstName}" />
+            </p:column>
+            <p:column headerText="Last Name">
+              <p:outputLabel value="#{userx.lastName}" />
+            </p:column>
+            <p:column headerText="e-mail">
+              <p:outputLabel value="#{userx.email}" />
+            </p:column>
+            <p:column headerText="Password">
+              <p:outputLabel value="#{userx.password}" />
+            </p:column>
+            <p:column headerText="Phone">
+              <p:outputLabel value="#{userx.phone}" />
+            </p:column>
+            <p:column headerText="Status"  style="width:25%" >
+              <p:outputLabel value="#{userx.userStatus}" >
+              </p:outputLabel>
+            </p:column>
+          </p:dataTable>
+        </h:form>
+
+        <p:dialog id="dlgDatos"  header="Datos" widgetVar="wdlgDatos" >
+          <h:form>
+            <p:outputLabel value="UserName" />
+            <p:inputText value="#{userxBean.userx.username}" required="false"/>
+            <br/>
+            <p:outputLabel value="First Name" />
+            <p:inputText value="#{userxBean.userx.firstName}" required="false"/>
+            <br/>
+            <p:outputLabel value="Last Name" />
+            <p:inputText value="#{userxBean.userx.lastName}" required="false"/>
+            <br/>
+            <p:outputLabel value="Email" />
+            <p:inputText value="#{userxBean.userx.email}" required="false"/>
+            <br/>
+            <p:outputLabel value="Password" />
+            <p:inputText value="#{userxBean.userx.password}" required="false"/>
+            <br/>
+            <p:outputLabel value="Phone" />
+            <p:inputText value="#{userxBean.userx.phone}" required="false"/>
+            <br/>
+            <p:outputLabel value="Status" />
+            <p:selectOneMenu value="#{userxBean.userx.userStatus}">
+              <f:selectItem itemLabel="Active" itemValue="A" />
+              <f:selectItem itemLabel="Inactive"  itemValue="I" />
+            </p:selectOneMenu>
+            <br/>
+            <p:commandButton value="Insertar"  actionListener="#{userxBean.insertar()}" 
+                             rendered="#{userxBean.flagInsertar}" update=":frmDatos:data" 
+                             oncomplete="PF('wdlgDatos').hide();" />
+            <p:commandButton value="Modificar" actionListener="#{userxBean.modificar()}" 
+                             rendered="#{!userxBean.flagInsertar}" update=":frmDatos:data" 
+                             oncomplete="PF('wdlgDatos').hide();"  />
+            <p:commandButton value="Cancelar" immediate="true"  oncomplete="PF('wdlgDatos').hide();" />
+          </h:form>
+        </p:dialog>
+
+      </ui:define>
+
+    </ui:composition>
+
+  </body>
+</html>
